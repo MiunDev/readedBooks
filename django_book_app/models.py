@@ -39,6 +39,28 @@ class Book(models.Model):
     def get_absolute_url(self):
         return reverse("book_detail", kwargs={"slug": self.url})
 
+    def get_review(self):
+        # сортируем список отзывов и выводятся только те, где поле parent == null
+        return self.reviews_set.filter(parent__isnull=True)
+
     class Meta:
         verbose_name = "Книга"
         verbose_name_plural = "Книги"
+
+
+class Reviews(models.Model):
+    """Отзывы"""
+    email = models.EmailField()
+    name = models.CharField("Имя", max_length=100)
+    text = models.TextField("Сообщение", max_length=5000)
+    parent = models.ForeignKey(
+        'self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True
+    )
+    book = models.ForeignKey(Book, verbose_name="книга", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name} - {self.book}"
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"

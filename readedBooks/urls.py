@@ -21,7 +21,8 @@ from django.urls import path
 
 urlpatterns = [
     path("", views.BookView.as_view()),  # главная страница
-    path("<slug:slug>/", views.BookDetailView.as_view()),
+    path("<slug:slug>/", views.BookDetailView.as_view(), name="book_detail"),
+    path("review/<int:pk>/", views.AddReview.as_view(), name="add_review"),
     # path("<slug:slug>/", views.BookDetailView.as_view(), name="book_detail"),
     path('admin/', admin.site.urls),
 ]
